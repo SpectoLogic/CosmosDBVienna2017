@@ -1,0 +1,39 @@
+﻿// Add Characters
+g.addV('person').property('name','Bilbo Beutlin');
+g.addV('person').property('name','Gandalf');
+g.addV('person').property('name','Thorin');
+g.V(); g.E();
+
+//Add Relationships - Gandalf knows every person! 
+g.V().has('name','Bilbo Beutlin').addE('knows').to(g.V().has('name','Gandalf'));
+g.V().has('name','Bilbo Beutlin').addE('knows').to(g.V().has('name','Thorin'));
+g.V().has('name','Gandalf').as('gandalf').V().hasLabel('person').where(neq('gandalf')).as('p').V().has("name","Gandalf").addE("knows").to(select('p'));
+
+
+// Add Places
+g.addV('place').property('name','Hobbithöhle');
+g.addV('place').property('name','Gasthaus Zum grünen Drachen');
+g.addV('place').property('name','Troll Lagerplatz');
+g.addV('place').property('name','Trollhöhle');
+g.addV('place').property('name','Rivendell');
+g.addV('place').property('name','Elronds Haus');
+g.addV('place').property('name','Orkhöhle');
+g.V(); g.E();
+
+// Add Paths
+g.V().has('name','Hobbithöhle').addE('path').to(V().has('name','Gasthaus Zum grünen Drachen')).property('weight',2.0);
+g.V().has('name','Gasthaus Zum grünen Drachen').addE('path').to(V().has('name','Troll Lagerplatz')).property('weight',4.0);
+g.V().has('name','Troll Lagerplatz').addE('path').to(V().has('name','Trollhöhle')).property('weight',1.0);
+g.V().has('name','Troll Lagerplatz').addE('path').to(V().has('name','Rivendell')).property('weight',3.0);
+g.V().has('name','Rivendell').addE('path').to(V().has('name','Elronds Haus')).property('weight',1.0);
+g.V().has('name','Elronds Haus').addE('path').to(V().has('name','Orkhöhle')).property('weight',5.0);
+g.V().has('name','Gasthaus Zum grünen Drachen').addE('path').to(V().has('name','Rivendell')).property('weight',4.0);
+g.V().has('name','Gasthaus Zum grünen Drachen').addE('path').to(V().has('name','Orkhöhle')).property('weight',8.0);
+
+// Query shortest path
+g.V().has('name','Hobbithöhle').repeat(outE().inV().simplePath()).until(has('name','Orkhöhle')).path().by(coalesce(values('weight'),constant(0.0))).map(unfold().sum());
+
+g.V().has('name','Hobbithöhle').repeat(outE().inV().simplePath()).until(has('name','Orkhöhle')).path().by(coalesce(values('name'),constant(0.0)));
+
+g.V().has('name','Hobbithöhle').repeat(outE().inV().simplePath()).until(has('name','Orkhöhle')).path().by(coalesce(values('name','weight'),constant(0.0)));
+
