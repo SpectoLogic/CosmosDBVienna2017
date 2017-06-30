@@ -133,7 +133,14 @@ namespace CompareAPI
             FeedOptions feedOptions = new FeedOptions() { PartitionKey = new PartitionKey("Hobbit") };
 
             var queryable = client.CreateDocumentQuery(collection.SelfLink, "SELECT * from p where p['FirstName']['$v'] = 'Bilbo'", feedOptions);
-            //var queryable = client.CreateDocumentQuery<PersonEntity>(collection.SelfLink, feedOptions).Where( doc => (doc.FirstName=="Bilbo") );
+            // queryable = client.CreateDocumentQuery<PersonEntity>(collection.SelfLink, feedOptions).Where( doc => (doc.FirstName=="Bilbo") );
+            var queryable2 = client.CreateDocumentQuery<PersonT>(collection.SelfLink, feedOptions).Where( doc => (doc.FirstName.v=="Bilbo") );
+
+            var query2 = queryable2.AsDocumentQuery<PersonT>();
+            while (query2.HasMoreResults)
+            {
+                var person = await query2.ExecuteNextAsync<PersonT>();
+            }
 
             var query = queryable.AsDocumentQuery();
             while (query.HasMoreResults)

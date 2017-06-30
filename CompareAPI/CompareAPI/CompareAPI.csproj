@@ -101,6 +101,7 @@
     <Compile Include="CosDB.cs" />
     <Compile Include="person.cs" />
     <Compile Include="PersonEntity.cs" />
+    <Compile Include="PersonT.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
