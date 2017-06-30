@@ -1,0 +1,38 @@
+// This is the place Hobbit cave
+
+{
+  "label": "place",
+  "name": [
+    {
+      "_value": "Hobbithöhle",
+      "id": "4b898ef2-81b7-44a4-8dda-5531fc1f79c2"
+    }
+  ],
+  "id": "7c5caa2b-0e23-46b3-8e25-9bdf6ed6ebb5",
+}
+
+// This is the place restaurant of the green dragon
+
+{
+  "label": "place",
+  "name": [
+    {
+      "_value": "Gasthaus Zum grünen Drachen",
+      "id": "3a71adb2-4311-4ef4-8398-c9e6d30bbbd5"
+    }
+  ],
+  "id": "84dd5315-bd41-40e3-bc83-bcbedc7bc4be",
+}
+
+// This is the edge document
+
+{
+  "label": "path",
+  "weight": 2,
+  "id": "52280f67-2062-41bb-b661-f67ff7d7f786",
+  "_sink": "84dd5315-bd41-40e3-bc83-bcbedc7bc4be",
+  "_sinkLabel": "place",
+  "_vertexId": "7c5caa2b-0e23-46b3-8e25-9bdf6ed6ebb5",
+  "_vertexLabel": "place",
+  "_isEdge": true,
+}
