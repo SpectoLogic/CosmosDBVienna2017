@@ -4,7 +4,7 @@
   "label": "place",
   "name": [
     {
-      "_value": "Hobbithöhle",
+      "_value": "Hobbithoehle",
       "id": "4b898ef2-81b7-44a4-8dda-5531fc1f79c2"
     }
   ],
@@ -17,7 +17,7 @@
   "label": "place",
   "name": [
     {
-      "_value": "Gasthaus Zum grünen Drachen",
+      "_value": "Gasthaus Zum gruenen Drachen",
       "id": "3a71adb2-4311-4ef4-8398-c9e6d30bbbd5"
     }
   ],
