@@ -78,6 +78,7 @@ namespace CompareAPI
 
         static async Task DemoMain()
         {
+            await Program.DemoChangeFeed();
             await Program.DemoMongoAPI();
             //await Program.DemoTableAPI();
             //await Program.DemoConsistency();
@@ -262,6 +263,11 @@ namespace CompareAPI
                     }
                 }
 
+                // ================================================================================
+                // The following is no longer supported with 0.2.4 update
+                // The classes have been updated with INTERNAL USE only
+                // ================================================================================
+                /*
                 GraphConnection graphConnection = await GraphConnection.Create(Account_DemoBuild_Hobbit, Account_DemoBuild_Hobbit_Key, "demodb", "thehobbit");
                 Microsoft.Azure.Graphs.GraphCommand cmd = new GraphCommand(graphConnection);
                 GraphTraversal personTrav = cmd.g().V().HasLabel("person");
@@ -269,6 +275,7 @@ namespace CompareAPI
                 {
                     Console.WriteLine(p);
                 }
+
                 Microsoft.Azure.Graphs.GraphCommand cmd2 = new GraphCommand(graphConnection, "g.V().hasLabel('person').union(V().hasLabel('place'))");
                 var res2 = cmd2.Execute();
                 int cnt = 0;
@@ -278,6 +285,7 @@ namespace CompareAPI
                     cnt++;
                 }
                 // 105 =>  g.V().hasLabel('person').union(V().hasLabel('place'))  .count()  .limit(1)
+                */
             }
             catch (Exception ex)
             {
@@ -389,5 +397,20 @@ namespace CompareAPI
         }
         #endregion
 
+        #region Change Feed Demo
+        static async Task DemoChangeFeed()
+        {
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Change Feed Demo failed with {ex.Message}.");
+                throw;
+            }
+        }
+
+        #endregion
     }
 }
