@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Threading.Tasks;
 using System.Linq;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace CompareAPI
 {
@@ -76,10 +78,11 @@ namespace CompareAPI
 
         static async Task DemoMain()
         {
-            await Program.DemoTableAPI();
+            await Program.DemoMongoAPI();
+            //await Program.DemoTableAPI();
             //await Program.DemoConsistency();
-            await Program.DemoGraphAPI();
-            await Program.DemoGeoConnect();
+            //await Program.DemoGraphAPI();
+            //await Program.DemoGeoConnect();
         }
         #endregion
 
@@ -313,5 +316,78 @@ namespace CompareAPI
         }
 
         #endregion
+
+        #region MongoDB
+        static async Task DemoMongoAPI()
+        {
+            try
+            {
+                MongoClient client = new MongoClient(Program.Account_DemoBuild_Mongo_ConnectionString);
+                var db = client.GetDatabase("demodb");
+                try
+                {
+                    await db.DropCollectionAsync("democol"); 
+                }catch (Exception)
+                {
+                }   
+                var col = db.GetCollection<MongoItem>("democol");
+                MongoItem itemA = new MongoItem() {
+                    id = "84476d91-8fe4-4d8c-8525-feefb3e12912",
+                    Container = "demo",
+                    UploadUser = new MUser() { FirstName = "Hansi", LastName = "Huber" },
+                    UserFlag = new string[] { "user1" },
+                    TagList = new string[] {"car","crash"}
+                };
+                MongoItem itemB = new MongoItem()
+                {
+                    id = "2ba8a3a2-9937-408b-b5d3-0acef8ce0fb7",
+                    Container = "marastore",
+                    UploadUser = new MUser() { FirstName = "Mara", LastName = "Jade" },
+                    UserFlag = new string[] { "user2" },
+                    TagList = new string[] { "car", "luxus" }
+                };
+                await col.InsertOneAsync(itemA);
+                await col.InsertOneAsync(itemB);
+
+                /// Try to load documents that have their "Container" property
+                /// start with "mara".
+                var result = from items in col.AsQueryable<MongoItem>()
+                         where items.Container.StartsWith("mara")
+                         select items;
+                foreach (var item in result)
+                {
+                    Console.WriteLine(item.Container);
+                }
+                
+                /// Try to load documents that contain a certain element in their Tag List
+                /// This will always return 0 results.
+                result = from items in col.AsQueryable<MongoItem>()
+                         where items.TagList.Contains<string>("car")
+                         select items;
+                foreach (var item in result)
+                {
+                    Console.WriteLine(item.id);
+                }
+
+                /// Again try to load the element by using Select Many
+                /// Fails with Exception: "$project or $group does not support {document}."
+                /// It seems not the full MongoDB API is supported. 
+                /// TODO: Find more information about this.
+                var tagResults = from a in col.AsQueryable<MongoItem>()
+                           from b in a.TagList where b.StartsWith("car")
+                           select b;
+                foreach (var tag in tagResults)
+                {
+                    Console.WriteLine(tag);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"MongoDB Demo failed with {ex.Message}.");
+                throw;
+            }
+        }
+        #endregion
+
     }
 }
