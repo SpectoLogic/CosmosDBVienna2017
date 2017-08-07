@@ -74,7 +74,7 @@ namespace CompareAPI
             int throughPut,
             string partitionKey,
             Func<DocumentCollection, IndexingPolicy> defineCustomIndex,
-            bool indexChanged)
+            bool indexChanged,bool forceNewCollection=false)
         {
             DocumentCollection docDBCollection = new DocumentCollection();
 
@@ -82,6 +82,12 @@ namespace CompareAPI
                             .Where(c => c.Id == colName)
                             .AsEnumerable()
                             .FirstOrDefault();
+
+            if ((forceNewCollection) && (docDBCollection != null))
+            {
+                await client.DeleteDocumentCollectionAsync(docDBCollection.SelfLink);
+                docDBCollection = null;
+            }
 
             if (docDBCollection == null)
             {

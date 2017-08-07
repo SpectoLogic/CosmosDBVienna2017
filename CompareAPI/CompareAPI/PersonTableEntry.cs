@@ -14,7 +14,7 @@ namespace CompareAPI
         [JsonProperty(PropertyName ="$v")]
         public string v { get; set; }
     }
-    public class PersonT
+    public class PersonTableEntry
     {
         public TableProperty FirstName { get; set; }
         public TableProperty LastName { get; set; }
