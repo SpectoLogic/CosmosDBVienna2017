@@ -26,6 +26,7 @@ namespace CompareAPI
         static string Account_DemoBuild_Mongo;
         static string Account_DemoBuild_Mongo_Key;
         static string Account_DemoBuild_Mongo_ConnectionString;
+        static string Account_Bitnami_Mongo_ConnectionString;
 
         static string Account_DemoBuild_Docs;
         static string Account_DemoBuild_Docs_Key;
@@ -49,6 +50,7 @@ namespace CompareAPI
             Account_DemoBuild_Mongo = ConfigurationManager.AppSettings["Account_DemoBuild_Mongo"];
             Account_DemoBuild_Mongo_Key = ConfigurationManager.AppSettings["Account_DemoBuild_Mongo_Key"];
             Account_DemoBuild_Mongo_ConnectionString = ConfigurationManager.AppSettings["Account_DemoBuild_Mongo_ConnectionString"];
+            Account_Bitnami_Mongo_ConnectionString = ConfigurationManager.AppSettings["Account_Bitnami_Mongo_ConnectionString"];
 
             Account_DemoBuild_Docs = ConfigurationManager.AppSettings["Account_DemoBuild_Docs"];
             Account_DemoBuild_Docs_Key = ConfigurationManager.AppSettings["Account_DemoBuild_Docs_Key"];
@@ -79,8 +81,8 @@ namespace CompareAPI
 
         static async Task DemoMain()
         {
-            await Program.DemoChangeFeed();
-            //await Program.DemoMongoAPI();
+            //await Program.DemoChangeFeed();
+            await Program.DemoMongoAPI();
             //await Program.DemoTableAPI();
             //await Program.DemoConsistency();
             //await Program.DemoGraphAPI();
@@ -331,7 +333,8 @@ namespace CompareAPI
         {
             try
             {
-                MongoClient client = new MongoClient(Program.Account_DemoBuild_Mongo_ConnectionString);
+                //MongoClient client = new MongoClient(Program.Account_DemoBuild_Mongo_ConnectionString);
+                MongoClient client = new MongoClient(Program.Account_Bitnami_Mongo_ConnectionString);
                 var db = client.GetDatabase("demodb");
                 try
                 {
@@ -369,7 +372,9 @@ namespace CompareAPI
                 }
                 
                 /// Try to load documents that contain a certain element in their Tag List
-                /// This will always return 0 results.
+                /// This will always return 0 results with DocumentDB
+                /// This will return the correct result with a Bitnami MongoDB Instance
+                /// It seems not the full MongoDB API is supported with CosmosDB or this is a bug! 
                 result = from items in col.AsQueryable<MongoItem>()
                          where items.TagList.Contains<string>("car")
                          select items;
@@ -380,8 +385,8 @@ namespace CompareAPI
 
                 /// Again try to load the element by using Select Many
                 /// Fails with Exception: "$project or $group does not support {document}."
-                /// It seems not the full MongoDB API is supported. 
-                /// TODO: Find more information about this.
+                /// 
+                /// Update: This also fails with a BitNami MongoDB Instance
                 var tagResults = from a in col.AsQueryable<MongoItem>()
                            from b in a.TagList where b.StartsWith("car")
                            select b;
