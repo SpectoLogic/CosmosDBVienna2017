@@ -8,7 +8,7 @@ using Microsoft.Azure.Documents;
 using System.Linq.Expressions;
 using Microsoft.Azure.Documents.Client;
 
-namespace CompareAPI
+namespace CompareAPI.ChangeFeedDemo
 {
     /// <summary>
     /// Factory for DocumentFeedObjserver (Used in the Change Feed - Sample)

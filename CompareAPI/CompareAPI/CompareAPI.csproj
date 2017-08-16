@@ -171,13 +171,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CosDB.cs" />
-    <Compile Include="DocumentFeedObserver.cs" />
-    <Compile Include="DocumentFeedObserverFactory.cs" />
-    <Compile Include="MongoItem.cs" />
+    <Compile Include="Config.cs" />
+    <Compile Include="ConsistencyDemo\Demo.cs" />
+    <Compile Include="GeoDistributionDemo\Demo.cs" />
+    <Compile Include="GraphDemo\Demo.cs" />
+    <Compile Include="MongoDBDemo\Demo.cs" />
+    <Compile Include="ChangeFeedDemo\Demo.cs" />
+    <Compile Include="MongoDBDemo\MUser.cs" />
+    <Compile Include="TableDemo\Demo.cs" />
+    <Compile Include="Utility\CosDB.cs" />
+    <Compile Include="ChangeFeedDemo\DocumentFeedObserver.cs" />
+    <Compile Include="ChangeFeedDemo\DocumentFeedObserverFactory.cs" />
+    <Compile Include="Utility\LinqExtensions.cs" />
+    <Compile Include="MongoDBDemo\MongoItem.cs" />
+    <Compile Include="MongoDBDemo\MongoQueryTest.cs" />
     <Compile Include="Person.cs" />
-    <Compile Include="PersonEntity.cs" />
-    <Compile Include="PersonTableEntry.cs" />
+    <Compile Include="TableDemo\PersonEntity.cs" />
+    <Compile Include="TableDemo\PersonTableEntry.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

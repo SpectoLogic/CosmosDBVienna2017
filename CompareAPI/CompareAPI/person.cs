@@ -7,16 +7,21 @@ using System.Threading.Tasks;
 
 namespace CompareAPI
 {
+    /// <summary>
+    /// Simple Person Entity
+    /// Used by: ChangeFeedDemo and GeoDistributionDemo
+    /// </summary>
     public class Person
     {
         public static explicit operator Person(Document doc)
         {
-            Person personResult = new Person();
-            personResult.id = doc.GetPropertyValue<string>("id");
-            personResult.name = doc.GetPropertyValue<string>("name");
-            personResult.label = doc.GetPropertyValue<string>("label");
-            personResult.city = doc.GetPropertyValue<string>("city");
-            /* and so on, for all the properties of Employee */
+            Person personResult = new Person()
+            {
+                id = doc.GetPropertyValue<string>("id"),
+                name = doc.GetPropertyValue<string>("name"),
+                label = doc.GetPropertyValue<string>("label"),
+                city = doc.GetPropertyValue<string>("city")
+            };
             return personResult;
         }
         public Person()

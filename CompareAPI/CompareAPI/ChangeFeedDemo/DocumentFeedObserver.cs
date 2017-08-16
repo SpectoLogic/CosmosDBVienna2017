@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CompareAPI
+namespace CompareAPI.ChangeFeedDemo
 {
     /// <summary>
     /// DocumentFeedObserver which gets instantiated by DocumentFeedObserverFactory which gets instantiated by ChangeFeedEventHost
