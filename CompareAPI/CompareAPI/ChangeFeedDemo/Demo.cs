@@ -14,6 +14,13 @@ namespace CompareAPI.ChangeFeedDemo
         /// <summary>
         /// This demo shows how you can use the ChangeFeed Functionality in CosmosDB
         /// Requires Nuget package: Microsoft.Azure.DocumentDB.ChangeFeedProcessor
+        /// This demo requires:
+        ///     CosmosDB Account set up and configuration of
+        ///         Account_DemoBuild_Mongo
+        ///         Account_DemoBuild_Mongo_Key
+        /// It will create a demodb-database 
+        ///     A partitioned personcol-Collection 
+        ///     A non paritioned leasecol-Collection
         /// </summary>
         /// <returns></returns>
         public static async Task DemoChangeFeed()
