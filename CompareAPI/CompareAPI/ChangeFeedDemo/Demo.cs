@@ -47,7 +47,8 @@ namespace CompareAPI.ChangeFeedDemo
                 Console.WriteLine("Done");
 
                 // Demonstrate how to read the Change Feed manually
-                await ProcessChangeFeedManualy(client, personCol);
+                // Uncommented for easier repo
+                // await ProcessChangeFeedManualy(client, personCol);
 
                 // Demonstrate the use of the ChangeFeed Processor
                 await ProcessChangeFeedWithChangeFeedProcessor(client, db, personCol);
