@@ -5,6 +5,7 @@ using Microsoft.Azure.Documents.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CompareAPI.ChangeFeedDemo
@@ -108,8 +109,8 @@ namespace CompareAPI.ChangeFeedDemo
 
             await host.RegisterObserverFactoryAsync(docObserverFactory);
 
-            Console.WriteLine("Press enter to add more documents...");
-            Console.ReadLine();
+            Console.WriteLine("Waiting 2-3 seconds before adding more documents...");
+            Thread.Sleep(2500);
 
             Random randGen = new Random((int)DateTime.Now.Ticks);
             List<string> cities = new List<string>() { "Vienna", "Paris", "Frankfurt", "Prag", "Seattle" };
