@@ -1,22 +1,28 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.12
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompareAPI", "CompareAPI\CompareAPI.csproj", "{4511473A-DD35-4443-878E-329198CF0235}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
+		DebugCosmosDB|Any CPU = DebugCosmosDB|Any CPU
+		DebugMongoDB|Any CPU = DebugMongoDB|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4511473A-DD35-4443-878E-329198CF0235}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4511473A-DD35-4443-878E-329198CF0235}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4511473A-DD35-4443-878E-329198CF0235}.DebugCosmosDB|Any CPU.ActiveCfg = DebugCosmosDB|Any CPU
+		{4511473A-DD35-4443-878E-329198CF0235}.DebugCosmosDB|Any CPU.Build.0 = DebugCosmosDB|Any CPU
+		{4511473A-DD35-4443-878E-329198CF0235}.DebugMongoDB|Any CPU.ActiveCfg = DebugMongoDB|Any CPU
+		{4511473A-DD35-4443-878E-329198CF0235}.DebugMongoDB|Any CPU.Build.0 = DebugMongoDB|Any CPU
 		{4511473A-DD35-4443-878E-329198CF0235}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4511473A-DD35-4443-878E-329198CF0235}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {41FB2B4A-C590-413F-9848-D7640E6A1DB1}
 	EndGlobalSection
 EndGlobal

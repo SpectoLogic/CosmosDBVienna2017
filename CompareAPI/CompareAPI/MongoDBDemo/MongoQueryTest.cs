@@ -9,6 +9,7 @@ using MongoDB.Driver.Linq;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace CompareAPI.MongoDBDemo
 {
@@ -23,21 +24,24 @@ namespace CompareAPI.MongoDBDemo
             Expression<Func<MongoItem, bool>> firstNameExpression2 = (d => (d.DemoUser.FirstName == "Michaela" || d.City == "Graz"));
             Expression<Func<MongoItem, bool>> modeExpression = (d => (d.Mode == "ModeA" || d.Mode == "ModeB" || d.Mode == "ModeC"));
             Expression<Func<MongoItem, bool>> modeExpression2 = (d => (d.Mode != "ModeA" && d.Mode != "ModeB" && d.Mode != "ModeC"));
+            Expression<Func<MongoItem, bool>> modeExpression3 = (d => (d.Mode == "ModeA"));
 
             DateTimeOffset sFrom = DateTimeOffset.ParseExact("2017:04:02 18:00:00", "yyyy:MM:dd HH:mm:ss", null).ToUniversalTime();
             DateTimeOffset sTo = DateTimeOffset.ParseExact("2017:04:03 15:59:00", "yyyy:MM:dd HH:mm:ss", null).ToUniversalTime();
-            Expression<Func<MongoItem, bool>> isWithinDateRange = (d => (d.CheckPoint.CompareTo(sFrom) >= 0 && d.CheckPoint.CompareTo(sTo) <= 0));
+            //Expression<Func<MongoItem, bool>> isWithinDateRange = (d => (d.CheckPoint.CompareTo(sFrom) >= 0 && d.CheckPoint.CompareTo(sTo) <= 0));
+            Expression<Func<MongoItem, bool>> isWithinDateRange = (d => (d.CheckPointUTC.CompareTo(sFrom.ToString("u")) >= 0 && d.CheckPointUTC.CompareTo(sTo.ToString("u")) <= 0));
 
             Expression<Func<MongoItem, bool>> containsTagFemale = (d => d.TagList.Contains<string>("female"));
             Expression<Func<MongoItem, bool>> containsUserID = (d => d.UserList.Contains<string>("martinau"));
 
-            Expression<Func<MongoItem, DateTimeOffset>> orderByDate = t => t.CheckPoint;
+            //Expression<Func<MongoItem, DateTimeOffset>> orderByDate = t => t.CheckPoint;
+            Expression<Func<MongoItem, string>> orderByDate = t => t.CheckPointUTC;
             #endregion
 
             #region Build a LINQ-Query, turn it to JSON, create aggregate Pipeline with BSON from JSON
             PipelineDefinition<MongoItem, MongoItem> aggregatePipeline = null;
             // Build a more complex LINQ Query
-            var query0 = query.Where(cityExpressionVienna).OrderBy("CheckPoint ASC").Skip(1).Take(2);
+            var query0 = query.Where(cityExpressionVienna).OrderBy("CheckPointUTC ASC").Skip(1).Take(2);
             // Use the overloaded toString()-method to retrieve the aggregate-query ==> "aggregate([{match-Expression},...])
             string mongoAggregateQueryString = query0.ToString();
             Regex aggregateParameters = new Regex(@"(aggregate\()(.*)(\)$)");
@@ -54,19 +58,32 @@ namespace CompareAPI.MongoDBDemo
             //aggregatePipeline = new BsonDocument[]
             //{
             //  matchBsonDoc,
-            //  new BsonDocument { { "$sort", new BsonDocument("CheckPoint", 1) } }
+            //  new BsonDocument { { "$sort", new BsonDocument("CheckPointUTC", 1) } }
             //};
 
+            int assertCounter = 0;
             var aggregateResults = col.Aggregate(aggregatePipeline);
             foreach (var item in aggregateResults.ToList<MongoItem>())
+            {
                 Console.WriteLine($"{item.DemoUser.FirstName} {item.DemoUser.LastName}");
+                if (assertCounter == 0) Debug.Assert(item.DemoUser.FirstName == "Nina");
+                if (assertCounter == 0) Debug.Assert(item.DemoUser.LastName == "Huber");
+                if (assertCounter == 1) Debug.Assert(item.DemoUser.FirstName == "Michaela");
+                if (assertCounter == 1) Debug.Assert(item.DemoUser.LastName == "Bauer");
+                assertCounter++;
+            }
+            Debug.Assert(assertCounter == 2);
             #endregion
 
             var query1 = query.Where(cityExpressionVienna).OrderBy(orderByDate);
             var query2 = query.Where(cityExpressionVienna).OrderByDescending(orderByDate);
-            var query3 = query.Where(cityExpressionVienna.AndAlso(containsTagFemale)).OrderBy(orderByDate);
-            var query4 = query.Where(cityExpressionGraz.AndAlso(containsTagFemale).AndAlso(containsUserID)).OrderBy(orderByDate);
-            var query5 = query.Where(cityExpressionVienna.AndAlso(isWithinDateRange)).OrderBy(orderByDate);
+
+            var query3 = query.Where(cityExpressionVienna.AndAlso(modeExpression3));
+            var query3Same = query.Where((d => d.City == "Vienna" && d.Mode == "ModeA"));
+
+            var query4 = query.Where(cityExpressionVienna.AndAlso(containsTagFemale)).OrderBy(orderByDate);
+            var query5 = query.Where(cityExpressionGraz.AndAlso(containsTagFemale).AndAlso(containsUserID)).OrderBy(orderByDate);
+            var query6 = query.Where(cityExpressionVienna.AndAlso(isWithinDateRange)).OrderBy(orderByDate);
 
             List<MongoItem> queryResult = null;
             queryResult = query1.ToList<MongoItem>();
@@ -74,11 +91,21 @@ namespace CompareAPI.MongoDBDemo
             queryResult = query2.ToList<MongoItem>();
             queryResult.Assert(new string[] { "Michaela Bauer", "Nina Huber", "Andreas Pollak" });
             queryResult = query3.ToList<MongoItem>();
-            queryResult.Assert(new string[] { "Nina Huber", "Michaela Bauer" });
-            queryResult = query4.ToList<MongoItem>();
-            queryResult.Assert(new string[] { "Martina Uhlig" });
-            queryResult = query5.ToList<MongoItem>();
             queryResult.Assert(new string[] { "Andreas Pollak", "Nina Huber" });
+            queryResult = query3Same.ToList<MongoItem>();
+            queryResult.Assert(new string[] { "Andreas Pollak", "Nina Huber" });
+            queryResult = query6.ToList<MongoItem>();
+            queryResult.Assert(new string[] { "Andreas Pollak", "Nina Huber" });
+
+            // Folgende Queries können nicht über die CosmosDB ausgeführt werden!!
+            // {aggregate([{ "$match" : { "TagList" : "female" } }])}
+            var testQuery = query.Where(containsTagFemale);
+            queryResult = testQuery.ToList<MongoItem>();
+            Debug.Assert(queryResult.Count() == 5);
+            queryResult = query4.ToList<MongoItem>();
+            queryResult.Assert(new string[] { "Nina Huber", "Michaela Bauer" });
+            queryResult = query5.ToList<MongoItem>();
+            queryResult.Assert(new string[] { "Martina Uhlig" });
         }
 
 

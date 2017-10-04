@@ -73,16 +73,19 @@ namespace CompareAPI
             Console.WriteLine("ChangeFeed Demo");
             Console.WriteLine("==================================================");
             // Demonstrates the use of ChangeFeeds with Azure CosmosDB
-            await ChangeFeedDemo.Demo.DemoChangeFeed();
-
-            return; // TEST
+            // await ChangeFeedDemo.Demo.DemoChangeFeed();
 
             // Demonstrates the usage of MongoAPI of Azure CosmosDB and the 
             // difference between a native MongoDB instance (f.e. Bitnami-Instance)
 
-            await MongoDBDemo.Demo.DemoMongoAPIQueries1();
-            await MongoDBDemo.Demo.DemoMongoAPIQueries2();
-            await MongoDBDemo.Demo.DemoStorageOfLocation();
+            Console.WriteLine("==================================================");
+            Console.WriteLine("MongoDB Demo");
+            Console.WriteLine("==================================================");
+            // await MongoDBDemo.MongoDemo.DemoMongoAPIDataTypes();
+            // await MongoDBDemo.MongoDemo.DemoMongoAPIQueries1();
+            // await MongoDBDemo.MongoDemo.DemoMongoAPIQueries2();
+            await MongoDBDemo.MongoDemo.DemoStorageOfLocation();
+            return;
 
             // Demonstrates the GraphAPI of Azure CosmosDB
             await GraphDemo.Demo.DemoGraphAPI();

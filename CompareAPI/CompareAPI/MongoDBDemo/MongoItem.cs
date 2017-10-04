@@ -28,7 +28,14 @@ namespace CompareAPI.MongoDBDemo
             this.DemoUser = new MUser() { FirstName = firstName, LastName = lastName };
             this.City = container;
             this.Mode = mode;
-            this.CheckPoint = DateTimeOffset.ParseExact(checkpoint, "yyyy:MM:dd HH:mm:ss", null);
+            try
+            {
+                this.CheckPoint = DateTimeOffset.ParseExact(checkpoint, "yyyy:MM:dd HH:mm:ss", null);
+            }
+            catch (Exception)
+            {
+                this.CheckPoint = DateTimeOffset.UtcNow;
+            }
             this.LocationMongoDB = new MongoDB.Driver.GeoJsonObjectModel.GeoJsonPoint<MongoDB.Driver.GeoJsonObjectModel.GeoJson2DGeographicCoordinates>(new MongoDB.Driver.GeoJsonObjectModel.GeoJson2DGeographicCoordinates(longitude, latitude));
             this.LocationCosmosDB = new Microsoft.Azure.Documents.Spatial.Point(longitude, latitude);
             this.UserList = userids;
@@ -50,6 +57,7 @@ namespace CompareAPI.MongoDBDemo
         /// to get the local time call: GetLocalTime() on the result.
         /// </summary>
         [JsonIgnore]
+        [BsonIgnore] // Do not forget for MongoDB API-LINQ Calls For Demo1 required to be commented out, for second demo required!
         public DateTimeOffset CheckPoint
         {
             get
